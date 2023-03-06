@@ -130,6 +130,16 @@ async function getNpmPackageInfo(packageName) {
   return null;
 }
 
+const supportedDrivers = [
+  'uiautomator2',
+  'xcuitest',
+  'mac2',
+  'expresso',
+  'safari',
+  'gecko',
+  'chromium',
+];
+
 export {
   ok,
   nok,
@@ -140,6 +150,7 @@ export {
   resolveExecutablePath,
   getNpmPackageInfo,
   resetLog,
+  supportedDrivers,
 };
 
 /**

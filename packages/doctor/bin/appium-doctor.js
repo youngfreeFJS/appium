@@ -2,13 +2,15 @@
 
 import yargs from 'yargs';
 import newDoctor from '../lib/factory';
-import {configureBinaryLog} from '../lib/utils';
+import {configureBinaryLog, supportedDrivers} from '../lib/utils';
 import {configure as configurePrompt} from '../lib/prompt';
 import {system} from '@appium/support';
 
 yargs
   .strict()
   .usage('Usage: $0 [options, defaults: --ios --android]')
+  .string('driver')
+  .describe('driver', 'Check driver setup')
   .boolean('ios')
   .describe('ios', 'Check iOS setup')
   .boolean('android')
@@ -22,13 +24,18 @@ yargs
   .boolean('no')
   .describe('no', 'Always respond no')
   .boolean('demo')
-  .describe('demo', 'Run appium-doctor demo (for dev).')
+  .describe('demo', 'Run appium-doctor demo (for dev1).')
   .help('h')
   .alias('h', 'help')
   .check(function (argv) {
-    if (!argv.ios && !argv.android && !argv.demo) {
+    if (!argv.ios && !argv.android && !argv.demo && !argv.driver) {
       argv.ios = system.isMac();
       argv.android = true;
+    }
+    if (!supportedDrivers.includes(argv.driver)) {
+      throw new Error(
+        `Could not resolve driver: ${argv.driver}. are you sure it's in the list of supported drivers? ${supportedDrivers}`
+      );
     }
     return true;
   });
