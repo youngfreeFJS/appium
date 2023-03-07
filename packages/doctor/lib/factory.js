@@ -6,11 +6,22 @@ import androidChecks from './android';
 import devChecks from './dev';
 import demoChecks from './demo';
 import xcuitestChecks from './xcuitest';
+import uiautomator2Checks from './uiautomator2';
+import mac2Checks from './mac2';
 
 /**
  * @type {DoctorGroup}
  */
-let checks = {generalChecks, iosChecks, androidChecks, devChecks, demoChecks, xcuitestChecks};
+let checks = {
+  generalChecks,
+  iosChecks,
+  androidChecks,
+  devChecks,
+  demoChecks,
+  xcuitestChecks,
+  uiautomator2Checks,
+  mac2Checks,
+};
 
 let newDoctor = (opts) => {
   let doctor = new Doctor();

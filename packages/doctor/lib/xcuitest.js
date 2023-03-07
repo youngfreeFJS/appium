@@ -7,6 +7,7 @@ import {
   OptionalIdbCommandCheck,
   OptionalApplesimutilsCommandCheck,
   OptionalIOSDeployCommandCheck,
+  OptionalXcprettyCommandCheck,
 } from './ios';
 import EnvVarAndPathCheck from './env';
 
@@ -31,5 +32,7 @@ checks.push(new OptionalLyftCommandCheck());
 checks.push(new OptionalIdbCommandCheck());
 checks.push(new OptionalApplesimutilsCommandCheck());
 checks.push(new OptionalIOSDeployCommandCheck());
+checks.push(new OptionalXcprettyCommandCheck());
 
+// TODO add go-ios, tidevice, wix appleSimUtils, py-ios-devices optional dep.
 export default checks;

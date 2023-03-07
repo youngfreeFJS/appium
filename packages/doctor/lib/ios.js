@@ -118,6 +118,34 @@ class OSXVersionCheck extends DoctorCheck {
   }
 }
 
+class XCodeVersionCheck extends DoctorCheck {
+  constructor(minXCodeVersion) {
+    super();
+    this.minXCodeVersion = minXCodeVersion;
+  }
+  async diagnose() {
+    const errMess = `XCode version >= ${this.minXCodeVersion} is required.`;
+    try {
+      const versionString = (await exec('xcodebuild', ['-v', '|grep', 'Xcode'])).stdout
+        .split('Xcode')[1]
+        .trim();
+      return util.compareVersions(this.minXCodeVersion, '<=', versionString)
+        ? ok(`OSX version is ${versionString}`)
+        : nok(`OSX version should be at least ${this.minXCodeVersion}!`);
+    } catch (err) {
+      log.debug(err);
+      return nok(errMess);
+    }
+  }
+  // eslint-disable-next-line require-await
+  async fix() {
+    return (
+      `XCode version should be at least ${this.minXCodeVersion} ` +
+      'Please read https://developer.apple.com/cn/support/xcode/ to update.'
+    );
+  }
+}
+
 checks.push(new EnvVarAndPathCheck('HOME'));
 
 class OptionalLyftCommandCheck extends DoctorCheck {
@@ -208,15 +236,38 @@ class OptionalIOSDeployCommandCheck extends DoctorCheck {
 }
 checks.push(new OptionalIOSDeployCommandCheck());
 
+class OptionalXcprettyCommandCheck extends DoctorCheck {
+  async diagnose() {
+    const xcprettyPath = await resolveExecutablePath('xcpretty');
+    return xcprettyPath
+      ? okOptional(
+          `xcpretty is installed at: ${xcprettyPath}. ${
+            (await exec('xcpretty', ['-version'])).stdout
+          }`
+        )
+      : nokOptional('xcpretty cannot be found');
+  }
+
+  // eslint-disable-next-line require-await
+  async fix() {
+    return `${
+      'xcpretty'.bold
+    } tool could be used to make Xcode output easier to read. It could be installed using ' gem install xcpretty ' command.`;
+  }
+}
+checks.push(new OptionalXcprettyCommandCheck());
+
 export {
   fixes,
   XcodeCheck,
   XcodeCmdLineToolsCheck,
+  XCodeVersionCheck,
   OSXVersionCheck,
   DevToolsSecurityCheck,
   OptionalIdbCommandCheck,
   OptionalApplesimutilsCommandCheck,
   OptionalIOSDeployCommandCheck,
   OptionalLyftCommandCheck,
+  OptionalXcprettyCommandCheck,
 };
 export default checks;
