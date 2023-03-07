@@ -1,5 +1,5 @@
 import {ok, nok, okOptional, nokOptional, resolveExecutablePath} from './utils'; // eslint-disable-line
-import {fs} from '@appium/support';
+import {fs, util} from '@appium/support';
 import {exec} from 'teen_process';
 import {DoctorCheck, FixSkippedError} from './doctor';
 import log from './logger';
@@ -90,6 +90,33 @@ class DevToolsSecurityCheck extends DoctorCheck {
   }
 }
 checks.push(new DevToolsSecurityCheck());
+
+// OSX Version
+class OSXVersionCheck extends DoctorCheck {
+  constructor(minOSXVersion) {
+    super();
+    this.minOSXVersion = minOSXVersion;
+  }
+  async diagnose() {
+    const errMess = `macOS version >= ${this.minOSXVersion} is required.`;
+    try {
+      const versionString = (await exec('sw_vers', ['-productVersion'])).stdout.trim();
+      return util.compareVersions(this.minOSXVersion, '<=', versionString)
+        ? ok(`OSX version is ${versionString}`)
+        : nok(`OSX version should be at least ${this.minOSXVersion}!`);
+    } catch (err) {
+      log.debug(err);
+      return nok(errMess);
+    }
+  }
+  // eslint-disable-next-line require-await
+  async fix() {
+    return (
+      `Mac computer system version should be at least ${this.minOSXVersion} ` +
+      'Please read https://support.apple.com/en-us/HT201541 to update.'
+    );
+  }
+}
 
 checks.push(new EnvVarAndPathCheck('HOME'));
 
@@ -185,6 +212,7 @@ export {
   fixes,
   XcodeCheck,
   XcodeCmdLineToolsCheck,
+  OSXVersionCheck,
   DevToolsSecurityCheck,
   OptionalIdbCommandCheck,
   OptionalApplesimutilsCommandCheck,

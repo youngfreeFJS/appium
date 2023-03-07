@@ -5,17 +5,21 @@ import iosChecks from './ios';
 import androidChecks from './android';
 import devChecks from './dev';
 import demoChecks from './demo';
+import xcuitestChecks from './xcuitest';
 
 /**
  * @type {DoctorGroup}
  */
-let checks = {generalChecks, iosChecks, androidChecks, devChecks, demoChecks};
+let checks = {generalChecks, iosChecks, androidChecks, devChecks, demoChecks, xcuitestChecks};
 
 let newDoctor = (opts) => {
   let doctor = new Doctor();
   for (let [k, v] of _.toPairs(opts)) {
     if (v) {
       doctor.register(checks[`${k}Checks`] || []);
+    }
+    if (k === 'driver') {
+      doctor.register(checks[`${v}Checks`] || []);
     }
   }
   return doctor;
