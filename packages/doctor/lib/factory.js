@@ -8,6 +8,7 @@ import demoChecks from './demo';
 import xcuitestChecks from './xcuitest';
 import uiautomator2Checks from './uiautomator2';
 import mac2Checks from './mac2';
+import espressoChecks from './espresso';
 
 /**
  * @type {DoctorGroup}
@@ -21,6 +22,7 @@ let checks = {
   xcuitestChecks,
   uiautomator2Checks,
   mac2Checks,
+  espressoChecks,
 };
 
 let newDoctor = (opts) => {

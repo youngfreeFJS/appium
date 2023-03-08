@@ -37,7 +37,7 @@
     "clean:workspaces": "lerna clean -y",
     "ci": "npm ci",
     "dev": "run-s \"build -- --watch\"",
-    "doctor": "node ./packages/doctor --driver mac2",
+    "doctor": "npm run build && node ./packages/doctor --driver espresso",
     "husky-install": "husky install",
     "generate-docs": "npm run --workspace=packages/appium generate-docs",
     "prepare": "run-p husky-install build:all",

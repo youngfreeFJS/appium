@@ -38,9 +38,11 @@ function nokOptional(message) {
 }
 
 const inquirer = {
+  // eslint-disable-line promise/prefer-await-to-callbacks
   prompt: B.promisify(function (question, cb) {
     // eslint-disable-line promise/prefer-await-to-callbacks
     _inquirer.prompt(question, function (resp) {
+      // eslint-disable-line promise/prefer-await-to-callbacks
       cb(null, resp);
     }); // eslint-disable-line promise/prefer-await-to-callbacks
   }),
@@ -134,7 +136,7 @@ const supportedDrivers = [
   'uiautomator2',
   'xcuitest',
   'mac2',
-  'expresso',
+  'espresso',
   'safari',
   'gecko',
   'chromium',
